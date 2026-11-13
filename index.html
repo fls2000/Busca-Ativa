@@ -153,3 +153,65 @@
         </div>
         <select id="filtro-turno-wpp" style="width:auto;font-weight:600;">
           <option value="todos">Todos os Turnos</option>
+          <option value="Manhã">Turno: Manhã</option>
+          <option value="Tarde">Turno: Tarde</option>
+          <option value="Noite">Turno: Noite</option>
+        </select>
+      </div>
+      <div id="grid-cards-whatsapp" class="grid-2">
+        <p class="subtitle">Carregando alunos faltosos...</p>
+      </div>
+    </section>
+
+    <section id="tela-relatorio" class="hidden">
+      <div class="header-row">
+        <div>
+          <h2>Relatório e Planilha Consolidada</h2>
+          <p class="subtitle">Visão geral das turmas, motivos e alunos com faltas recorrentes.</p>
+        </div>
+        <button type="button" id="btn-exportar-csv" class="btn-primary">📥 Baixar Planilha (CSV / Excel)</button>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <span style="font-size:12px;font-weight:700;color:#64748b;">TOTAL DE FALTAS</span>
+          <div id="kpi-total" class="kpi-num">0</div>
+        </div>
+        <div class="card">
+          <span style="font-size:12px;font-weight:700;color:#64748b;">CONTATOS FEITOS</span>
+          <div id="kpi-retorno" class="kpi-num" style="color:#0d9488;">0%</div>
+        </div>
+        <div class="card" style="border-color:#fecaca;background:#fef2f2;">
+          <span style="font-size:12px;font-weight:700;color:#dc2626;">ALERTA (2+ FALTAS)</span>
+          <div id="kpi-criticos" class="kpi-num" style="color:#b91c1c;">0</div>
+        </div>
+      </div>
+
+      <div class="card" style="overflow-x:auto;padding:0;">
+        <table>
+          <thead>
+            <tr>
+              <th>Turma</th>
+              <th>Turno</th>
+              <th>Total Faltas</th>
+              <th>Motivos Registrados</th>
+              <th>Alunos Recorrentes (2+)</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-relatorio-corpo">
+            <tr><td colspan="5">Calculando relatório...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <nav class="mobile-nav">
+    <button type="button" id="nav-mob-captura" class="mob-btn active"><span style="font-size:18px;">📸</span>Captura</button>
+    <button type="button" id="nav-mob-whatsapp" class="mob-btn"><span style="font-size:18px;">💬</span>WhatsApp</button>
+    <button type="button" id="nav-mob-relatorio" class="mob-btn"><span style="font-size:18px;">📊</span>Relatório</button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
