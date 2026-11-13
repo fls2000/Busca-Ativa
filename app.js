@@ -1,5 +1,5 @@
 var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHgJC9kCFC1lDlOku8fjk54K3-cA__3jFjVtDxGsPZCehzSyDJd97ToIbb8lj1TPZMtw/exec";
-var GEMINI_API_KEY = "AQ.Ab8RN6Kh2XtimPJN9j3DtObWM-K00TGrFfbsMiKdo9uwLCEXoA";
+
 
 var turmasPorTurno = {
   "Manhã": ["1º Ano A", "1º Ano B", "2º Ano A", "2º Ano Técnico Adm", "3º Ano A", "3º Ano B"],
@@ -82,63 +82,6 @@ function criarMensagemPadrao(nome, turma, turno) {
   return "Olá! Aqui é da equipe da E.E. Pedro Augusto Barreto. Notamos a ausência do(a) estudante " + nome + ", da turma " + turma + ", nas primeiras aulas do turno da " + turno + " hoje. Está tudo bem por aí? Por favor, nos informe o motivo da falta para que possamos registrar e apoiar no que for preciso.";
 }
 
-function processarFotoComIA(input) {
-  if (!input.files || !input.files.length) return;
-  var arquivo = input.files.item(0);
-  var turma = document.getElementById("select-turma").value;
-  mostrarStatusIA("⏳ Lendo lista de chamada com IA...", "carregando");
-
-  var r = new FileReader();
-  r.readAsDataURL(arquivo);
-  r.onload = function() {
-    var base64Data = r.result.split(",").pop();
-    var promptTexto = "Analise esta foto de chamada escolar da turma " + turma + " (" + turnoAtual + "). Liste APENAS os nomes dos alunos marcados com falta (F ou ausencia). Responda SOMENTE um JSON puro neste formato exato: {\"nomes\": [\"Nome 1\", \"Nome 2\"]}";
-    var urlApi = "https://googleapis.com" + GEMINI_API_KEY;
-
-    fetch(urlApi, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{
-          parts: [
-            { text: promptTexto },
-            { inline_data: { mime_type: arquivo.type, data: base64Data } }
-          ]
-        }]
-      })
-    })
-    .then(function(response) { return response.json(); })
-    .then(function(data) {
-      if (data.error) throw new Error(data.error.message);
-      var textoBruto = data.candidates.content.parts.text;
-      var textoLimpo = textoBruto.replace(/```json/g, "").replace(/```/g, "").trim();
-      var json = JSON.parse(textoLimpo);
-
-      if (!json.nomes || json.nomes.length === 0) {
-        mostrarStatusIA("ℹ️ Nenhuma falta ('F') identificada nesta foto.", "sucesso");
-        return null;
-      }
-
-      var alunosFormatados = json.nomes.map(function(nome) {
-        return { nome: nome, mensagem: criarMensagemPadrao(nome, turma, turnoAtual) };
-      });
-
-      mostrarStatusIA("✅ " + alunosFormatados.length + " falta(s) lida(s)! Salvando na planilha...", "carregando");
-
-      return chamarServidor({
-        acao: "salvarFaltas",
-        dados: { turno: turnoAtual, turma: turma, alunos: alunosFormatados }
-      }).then(function() {
-        mostrarStatusIA("🎉 Sucesso! " + alunosFormatados.length + " aluno(s) salvo(s) na planilha!", "sucesso");
-        input.value = "";
-        carregarDadosPlanilha();
-      });
-    })
-    .catch(function(erro) {
-      mostrarStatusIA("❌ Erro na leitura/envio: " + erro.message, "erro");
-    });
-  };
-}
 function processarTextoManual() {
   var campo = document.getElementById("input-manual");
   var texto = campo.value.trim();
