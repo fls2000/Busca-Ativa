@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-512.png">
+  <title>Busca Ativa Escolar</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #f1f5f9; color: #1e293b; display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; background: #0f172a; color: #fff; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    .brand-icon { width: 42px; height: 42px; background: #14b8a6; color: #0f172a; font-weight: 800; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .brand h1 { font-size: 18px; font-weight: 700; }
+    .brand p { font-size: 12px; color: #94a3b8; }
+    .nav-btn { width: 100%; background: transparent; border: none; color: #cbd5e1; padding: 12px 16px; border-radius: 8px; text-align: left; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+    .nav-btn:hover { background: #1e293b; color: #fff; }
+    .nav-btn.active { background: #0d9488; color: #fff; }
+    .sync-box { background: #1e293b; padding: 14px; border-radius: 8px; font-size: 12px; color: #94a3b8; }
+    .btn-sync { width: 100%; background: #1e293b; border: 1px solid #334155; color: #2dd4bf; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
+    .btn-sync:hover { background: #334155; }
+    .mobile-header, .mobile-nav { display: none; }
+    .main { flex: 1; padding: 32px; max-width: 1100px; margin: 0 auto; width: 100%; }
+    .header-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+    h2 { font-size: 24px; color: #0f172a; }
+    .subtitle { font-size: 14px; color: #64748b; margin-top: 4px; }
+    .turno-group { background: #e2e8f0; padding: 4px; border-radius: 8px; display: inline-flex; }
+    .turno-btn { border: none; background: transparent; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; color: #475569; cursor: pointer; }
+    .turno-btn.active { background: #fff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 20px; }
+    .upload-card { border: 2px dashed #2dd4bf; text-align: center; padding: 32px 20px; }
+    .cam-icon { width: 60px; height: 60px; background: #f0fdfa; color: #0d9488; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 12px; }
+    select, input[type="text"] { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #f8fafc; color: #1e293b; }
+    .flex-row { display: flex; gap: 10px; align-items: center; }
+    .btn-primary { background: #0d9488; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+    .btn-primary:hover { background: #0f766e; }
+    .btn-dark { background: #1e293b; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .btn-wpp { width: 100%; background: #16a34a; color: #fff; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin: 12px 0; }
+    .btn-wpp:hover { background: #15803d; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .badge-pendente { background: #fef3c7; color: #92400e; }
+    .badge-ok { background: #d1fae5; color: #065f46; }
+    .msg-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 13px; color: #334155; font-style: italic; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { background: #f1f5f9; color: #475569; text-align: left; padding: 12px; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; }
+    td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+    .kpi-num { font-size: 28px; font-weight: 800; margin-top: 6px; }
+    .status-msg { margin-top: 14px; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; display: none; }
+    .hidden { display: none !important; }
+    @media (max-width: 768px) {
+      body { flex-direction: column; padding-bottom: 70px; }
+      .sidebar { display: none; }
+      .mobile-header { display: flex; justify-content: space-between; align-items: center; background: #0f172a; color: #fff; padding: 14px 16px; position: sticky; top: 0; z-index: 10; }
+      .mobile-nav { display: flex; justify-content: space-around; background: #fff; border-top: 1px solid #e2e8f0; position: fixed; bottom: 0; left: 0; right: 0; padding: 8px 0; z-index: 20; }
+      .mob-btn { background: none; border: none; font-size: 11px; font-weight: 600; color: #64748b; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; }
+      .mob-btn.active { color: #0d9488; }
+      .main { padding: 16px; }
+      .flex-row { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-icon">BA</div>
+        <div>
+          <h1>Busca Ativa</h1>
+          <p>Escola Estadual</p>
+        </div>
+      </div>
+      <button onclick="mudarTela('captura')" id="nav-pc-captura" class="nav-btn active">📸 Captura de Chamada</button>
+      <button onclick="mudarTela('whatsapp')" id="nav-pc-whatsapp" class="nav-btn">💬 Central WhatsApp Web</button>
+      <button onclick="mudarTela('relatorio')" id="nav-pc-relatorio" class="nav-btn">📊 Relatório Semanal</button>
+    </div>
+    <div>
+      <button onclick="carregarDadosPlanilha()" class="btn-sync">🔄 Atualizar Dados Agora</button>
+      <div class="sync-box">
+        <strong style="color:#e2e8f0">Sincronizado:</strong><br>
+        Celular ↔ Planilha ↔ PC
+      </div>
+    </div>
+  </aside>
+
+  <header class="mobile-header">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="background:#14b8a6;color:#0f172a;font-weight:800;padding:4px 8px;border-radius:6px;">BA</span>
+      <strong>Busca Ativa</strong>
+    </div>
+    <button onclick="carregarDadosPlanilha()" style="background:#1e293b;color:#2dd4bf;border:none;padding:6px 10px;border-radius:6px;font-size:12px;">🔄 Sincronizar</button>
+  </header>
+
+  <main class="main">
+    <section id="tela-captura">
+      <div class="header-row">
+        <div>
+          <h2>Registro Diário de Faltas</h2>
+          <p class="subtitle">Selecione o turno e a turma, depois fotografe a folha de chamada.</p>
+        </div>
+        <div class="turno-group">
+          <button onclick="selecionarTurno('Manhã', this)" class="turno-btn active">Manhã</button>
+          <button onclick="selecionarTurno('Tarde', this)" class="turno-btn">Tarde</button>
+          <button onclick="selecionarTurno('Noite', this)" class="turno-btn">Noite</button>
+        </div>
+      </div>
+
+      <div class="card flex-row">
+        <label style="font-weight:600;font-size:14px;white-space:nowrap;">Turma Selecionada:</label>
+        <select id="select-turma" style="font-weight:700;"></select>
+      </div>
+
+      <div class="card upload-card">
+        <div class="cam-icon">📷</div>
+        <h3 style="margin-bottom:6px;">Fotografar Lista de Chamada</h3>
+        <p class="subtitle" style="margin-bottom:16px;">A IA vai ler os alunos marcados com "F" e enviar direto para o PC.</p>
+        <label class="btn-primary">
+          <span>Tirar Foto ou Escolher Imagem</span>
+          <input type="file" id="input-foto" accept="image/*" capture="environment" class="hidden" onchange="processarFotoComIA(this)">
+        </label>
+        <div id="status-ia" class="status-msg"></div>
+      </div>
+
+      <div class="card">
+        <label style="display:block;font-weight:600;font-size:13px;margin-bottom:8px;">Ou digite os nomes dos faltosos (separados por vírgula):</label>
+        <div class="flex-row">
+          <input type="text" id="input-manual" placeholder="Ex: João Silva, Maria Oliveira, Pedro Santos">
+          <button onclick="processarTextoManual()" class="btn-dark">Enviar para Planilha</button>
+        </div>
+      </div>
+
+      <h3 style="font-size:16px;margin-bottom:12px;">Últimos Registros Salvos na Planilha</h3>
+      <div id="lista-recente-captura" class="grid-2">
+        <p class="subtitle">Carregando registros...</p>
+      </div>
+    </section>
+
+    <section id="tela-whatsapp" class="hidden">
+      <div class="header-row">
+        <div>
+          <h2>Central de Contato (WhatsApp Web)</h2>
+          <p class="subtitle">Copie a mensagem acolhedora, envie pelo WhatsApp Web e registre o retorno.</p>
+        </div>
+        <select id="filtro-turno-wpp" onchange="renderizarTelaWhatsApp()" style="width:auto;font-weight:600;">
+          <option value="todos">Todos os Turnos</option>
+          <option value="Manhã">Turno: Manhã</option>
+          <option value="Tarde">Turno: Tarde</option>
+          <option value="Noite">Turno: Noite</option>
+        </select>
+      </div>
+      <div id="grid-cards-whatsapp" class="grid-2">
