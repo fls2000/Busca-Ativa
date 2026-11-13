@@ -357,4 +357,25 @@ document.getElementById("btn-exportar-csv").addEventListener("click", exportarCS
 document.getElementById("filtro-turno-wpp").addEventListener("change", renderizarTelaWhatsApp);
 document.getElementById("input-foto").addEventListener("change", function() { processarFotoComIA(this); });
 
-var botoesTurno = document.querySelectorAll(".turno-btn");
+document.querySelectorAll(".turno-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    selecionarTurno(btn.getAttribute("data-turno"), btn);
+  });
+});
+
+document.getElementById("grid-cards-whatsapp").addEventListener("click", function(e) {
+  if (e.target.classList.contains("btn-wpp")) {
+    copiarEAbrirWhatsApp(e.target.getAttribute("data-wpp-id"), e.target);
+  }
+  if (e.target.classList.contains("btn-save-retorno")) {
+    salvarRetorno(e.target.getAttribute("data-save-id"), e.target);
+  }
+});
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js");
+}
+
+atualizarDropdownTurmas("Manhã");
+carregarDadosPlanilha();
+
