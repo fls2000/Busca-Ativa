@@ -73,12 +73,12 @@
           <p>Escola Estadual</p>
         </div>
       </div>
-      <button type="button" onclick="mudarTela('captura')" id="nav-pc-captura" class="nav-btn active">📸 Captura de Chamada</button>
-      <button type="button" onclick="mudarTela('whatsapp')" id="nav-pc-whatsapp" class="nav-btn">💬 Central WhatsApp Web</button>
-      <button type="button" onclick="mudarTela('relatorio')" id="nav-pc-relatorio" class="nav-btn">📊 Relatório Semanal</button>
+      <button type="button" id="nav-pc-captura" class="nav-btn active">📸 Captura de Chamada</button>
+      <button type="button" id="nav-pc-whatsapp" class="nav-btn">💬 Central WhatsApp Web</button>
+      <button type="button" id="nav-pc-relatorio" class="nav-btn">📊 Relatório Semanal</button>
     </div>
     <div>
-      <button type="button" onclick="carregarDadosPlanilha()" class="btn-sync">🔄 Atualizar Dados Agora</button>
+      <button type="button" id="btn-sync-pc" class="btn-sync">🔄 Atualizar Dados Agora</button>
       <div class="sync-box">
         <strong style="color:#e2e8f0">Sincronizado:</strong><br>
         Celular ↔ Planilha ↔ PC
@@ -91,7 +91,7 @@
       <span style="background:#14b8a6;color:#0f172a;font-weight:800;padding:4px 8px;border-radius:6px;">BA</span>
       <strong>Busca Ativa</strong>
     </div>
-    <button type="button" onclick="carregarDadosPlanilha()" style="background:#1e293b;color:#2dd4bf;border:none;padding:6px 10px;border-radius:6px;font-size:12px;">🔄 Sincronizar</button>
+    <button type="button" id="btn-sync-mob" style="background:#1e293b;color:#2dd4bf;border:none;padding:6px 10px;border-radius:6px;font-size:12px;">🔄 Sincronizar</button>
   </header>
 
   <main class="main">
@@ -102,22 +102,15 @@
           <p class="subtitle">Selecione o turno e a turma, depois fotografe a folha de chamada.</p>
         </div>
         <div class="turno-group">
-          <button type="button" onclick="selecionarTurno('Manhã', this)" class="turno-btn active">Manhã</button>
-          <button type="button" onclick="selecionarTurno('Tarde', this)" class="turno-btn">Tarde</button>
-          <button type="button" onclick="selecionarTurno('Noite', this)" class="turno-btn">Noite</button>
+          <button type="button" data-turno="Manhã" class="turno-btn active">Manhã</button>
+          <button type="button" data-turno="Tarde" class="turno-btn">Tarde</button>
+          <button type="button" data-turno="Noite" class="turno-btn">Noite</button>
         </div>
       </div>
 
       <div class="card flex-row">
         <label style="font-weight:600;font-size:14px;white-space:nowrap;">Turma Selecionada:</label>
-        <select id="select-turma" style="font-weight:700;">
-          <option value="1º Ano A">1º Ano A</option>
-          <option value="1º Ano B">1º Ano B</option>
-          <option value="2º Ano A">2º Ano A</option>
-          <option value="2º Ano Técnico Adm">2º Ano Técnico Adm</option>
-          <option value="3º Ano A">3º Ano A</option>
-          <option value="3º Ano B">3º Ano B</option>
-        </select>
+        <select id="select-turma" style="font-weight:700;"></select>
       </div>
 
       <div class="card upload-card">
@@ -126,7 +119,7 @@
         <p class="subtitle" style="margin-bottom:16px;">A IA vai ler os alunos marcados com "F" e enviar direto para o PC.</p>
         <label class="btn-primary">
           <span>Tirar Foto ou Escolher Imagem</span>
-          <input type="file" id="input-foto" accept="image/*" capture="environment" class="hidden" onchange="processarFotoComIA(this)">
+          <input type="file" id="input-foto" accept="image/*" capture="environment" class="hidden">
         </label>
         <div id="status-ia" class="status-msg"></div>
       </div>
@@ -135,9 +128,8 @@
         <label style="display:block;font-weight:600;font-size:13px;margin-bottom:8px;">Ou digite os nomes dos faltosos (separados por vírgula):</label>
         <div class="flex-row">
           <input type="text" id="input-manual" placeholder="Ex: João Silva, Maria Oliveira, Pedro Santos">
-          <button type="button" onclick="processarTextoManual()" class="btn-dark">Enviar para Planilha</button>
+          <button type="button" id="btn-enviar-manual" class="btn-dark">Enviar para Planilha</button>
         </div>
-        <div id="status-manual" class="status-msg"></div>
       </div>
 
       <h3 style="font-size:16px;margin-bottom:12px;">Últimos Registros Salvos na Planilha</h3>
@@ -150,3 +142,18 @@
       <div class="header-row">
         <div>
           <h2>Central de Contato (WhatsApp Web)</h2>
+          <p class="subtitle">Copie a mensagem acolhedora, envie pelo WhatsApp Web e registre o retorno.</p>
+        </div>
+        <select id="filtro-turno-wpp" style="width:auto;font-weight:600;">
+          <option value="todos">Todos os Turnos</option>
+          <option value="Manhã">Turno: Manhã</option>
+          <option value="Tarde">Turno: Tarde</option>
+          <option value="Noite">Turno: Noite</option>
+        </select>
+      </div>
+      <div id="grid-cards-whatsapp" class="grid-2">
+        <p class="subtitle">Carregando alunos faltosos...</p>
+      </div>
+    </section>
+
+    <section id="tela-relatorio" class="hidden">
