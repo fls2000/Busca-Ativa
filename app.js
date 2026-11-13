@@ -65,6 +65,8 @@ function mudarTela(tela) {
       else elMob.classList.remove("active");
     }
   }
+    renderizarTelaWhatsApp();
+  renderizarRelatorio();
 }
 
 function mostrarStatusIA(msg, tipo) {
