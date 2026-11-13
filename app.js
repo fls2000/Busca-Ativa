@@ -1,4 +1,4 @@
-var APPS_SCRIPT_URL = "https://google.com";
+var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHgJC9kCFC1lDlOku8fjk54K3-cA__3jFjVtDxGsPZCehzSyDJd97ToIbb8lj1TPZMtw/exec";
 var GEMINI_API_KEY = "AQ.Ab8RN6Kh2XtimPJN9j3DtObWM-K00TGrFfbsMiKdo9uwLCEXoA";
 
 var turmasPorTurno = {
@@ -13,6 +13,8 @@ var registrosGlobais = [];
 function chamarServidor(payload) {
   return fetch(APPS_SCRIPT_URL, {
     method: "POST",
+    redirect: "follow",
+
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload)
   }).then(function(resp) {
