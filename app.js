@@ -197,24 +197,20 @@ function copiarEAbrirWhatsApp(id, btn) {
     renderizarRelatorio();
   }, 1000);
 
-  var ehCelular = /Android|iPhone|iPad/i.test(navigator.userAgent);
   var tel = (r.telefone || "").replace(/\D/g, "");
   if (tel && !tel.startsWith("55")) tel = "55" + tel;
 
+  var baseWa = "https://wa" + ".me/";
   var destino = "";
   if (tel) {
-    btn.textContent = "✅ Abrindo conversa direta...";
-    destino = ehCelular 
-      ? "whatsapp://send?phone=" + tel + "&text=" + encodeURIComponent(r.mensagem)
-      : "https://whatsapp.com" + tel + "&text=" + encodeURIComponent(r.mensagem);
+    btn.textContent = "✅ Abrindo WhatsApp...";
+    destino = baseWa + tel + "?text=" + encodeURIComponent(r.mensagem);
   } else {
     btn.textContent = "✅ Copiado! (Sem tel na agenda)";
-    destino = ehCelular 
-      ? "whatsapp://send?text=" + encodeURIComponent(r.mensagem)
-      : "https://whatsapp.com";
+    destino = baseWa + "?text=" + encodeURIComponent(r.mensagem);
   }
 
-  window.open(destino, "aba_whatsapp_escola");
+  window.location.href = destino;
 }
 
 function salvarRetorno(id, btn) {
